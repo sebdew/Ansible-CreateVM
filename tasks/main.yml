@@ -137,7 +137,7 @@
 - name: Configure SNMP service
   blockinfile:
     path: "{{ locations.snmp_conf }}"
-    insertafter: "rocommunity"
+    insertafter: "EOF"
     content: rocommunity "{{ snmp_community }}"
 
 - name: Restart and activate SNMP service
