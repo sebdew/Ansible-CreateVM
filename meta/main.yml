@@ -1,0 +1,13 @@
+---
+galaxy_info:
+  author: "Sébastien DEWARLEZ"
+  description: "This role configure a Linux server based on company policies."
+  company: "DEWARLEZ"
+  license: "Open Source"
+  min_ansible_version: 2.4
+  platforms:
+    - name: Debian
+      versions: 12
+  galaxy_tags:
+    - linux
+    - bootstrap

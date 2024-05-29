@@ -1,0 +1,45 @@
+---
+# Choose OS version you want to deploy (Debian (10, 11 or 12), Ubuntu (24.04) or Rocky (8 or 9))
+os2deploy: "debian"
+version2deploy: 12
+
+# VM properties
+vm_name: "vm-test"
+vm_root_pass: "viergee"
+
+# Hardware specs
+start_at_boot: true
+memory: 4096
+cores: 2
+hdd_size: 50G
+hdd_storage_location: local-vm
+
+# Network specs
+network_bridge: vmbr0
+network_vlan: 301
+network_ip: 192.168.4.10
+network_cidr: 25
+network_gw: 192.168.4.1
+dns_ip: 192.168.2.134
+dns_search: dewarlez.fr
+
+# SNMP community
+snmp_community: public
+
+# File and folder default location
+locations:
+  working_folder: "/tmp"
+  ansible_public_key: "~/.ssh/id_rsa.pub"
+  snmp_conf: "/etc/snmp/snmpd.conf"
+
+# Cloud-Init image location
+qcow2_images:
+  debian:
+    12: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"
+    11: "https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-genericcloud-amd64.qcow2"
+    10: "https://cloud.debian.org/images/cloud/buster/latest/debian-10-genericcloud-amd64.qcow2"
+  ubuntu:
+    24.04: "http://cloud-images.ubuntu.com/releases/noble/release/ubuntu-24.04-server-cloudimg-amd64.img"
+  rocky:
+    9: "http://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-GenericCloud-Base.latest.x86_64.qcow2"
+    8: "http://dl.rockylinux.org/pub/rocky/8/images/x86_64/Rocky-8-GenericCloud-Base.latest.x86_64.qcow2"

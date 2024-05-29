@@ -1,0 +1,147 @@
+---
+- name: Download QCOW2 image
+  get_url:
+    url: "{{ qcow2_images[os2deploy][version2deploy] }}"
+    dest: "{{ locations.working_folder }}"
+
+- name: Display downloaded file name
+  debug:
+    msg: "{{ qcow2_images[os2deploy][version2deploy] | basename}}"
+
+# https://forum.proxmox.com/threads/next-availale-vmid-and-available-templates-through-api.14839/
+- name: Get next VM ID
+  command: |
+    pvesh get /cluster/nextid
+  register: vm_id
+
+- name: VM creation
+  command: |
+    qm create {{ vm_id.stdout }} \
+      --name {{ vm_name }} \
+      --memory {{ memory }} \
+      --cores {{ cores }} \
+      --net0 virtio,bridge={{ network_bridge }},tag={{ network_vlan }} \
+      --scsihw virtio-scsi-pci \
+      --agent 1
+
+- name: Be sure that VM will start with host when it power on
+  command: |
+    qm set {{ vm_id.stdout }} \
+      --onboot 1
+  when: start_at_boot == true
+
+- name: Import cloud-init disk previously downloaded
+  command: |
+    qm set {{ vm_id.stdout }} \
+    --scsi0 {{ hdd_storage_location }}:0,import-from={{ locations.working_folder }}/{{ qcow2_images[os2deploy][version2deploy] | basename}},format=qcow2
+
+- name: Resize disk
+  command: |
+    qm resize {{ vm_id.stdout }} scsi0 {{ hdd_size }}
+
+- name: Remove disk from temporary folder
+  file:
+    state: absent
+    path: "{{ locations.working_folder }}/{{ qcow2_images[os2deploy][version2deploy] | basename}}"
+
+- name: Add CD-ROM device for Cloud-Init
+  command: |
+    qm set {{ vm_id.stdout }} \
+    --ide2 local-lvm:cloudinit
+    
+- name: Force boot order
+  command: |
+    qm set {{ vm_id.stdout }} \
+    --boot order=scsi0
+
+- name: Configure IP address
+  command: |
+    qm set {{ vm_id.stdout }} \
+    --ipconfig0 ip={{ network_ip }}/{{ network_cidr }},gw={{ network_gw }}
+
+- name: Configure DNS
+  command: |
+    qm set {{ vm_id.stdout }} \
+    --nameserver {{ dns_ip }} \
+    --searchdomain {{ dns_search }}
+
+- name: Init username and password (security risk !)
+  command: |
+    qm set {{ vm_id.stdout }} \
+    --ciuser root \
+    --cipassword {{ vm_root_pass }}
+
+- name: Add ansible public key for futur usage
+  command: |
+    qm set {{ vm_id.stdout }} \
+    --sshkeys "{{ locations.ansible_public_key }}"
+
+- name: Force package update at first boot
+  command: |
+    qm set {{ vm_id.stdout }} \
+    --ciupgrade 1
+
+- name: Start virtual machine
+  command: |
+    qm start {{ vm_id.stdout }}
+
+- name: Wait for Cloud-Init end
+  wait_for:
+    host: "{{ network_ip }}"
+    port: 22
+    delay: 60
+    state: present
+
+- name: Before first connexion, we remove known IP from file known_hosts (just in case of)
+  command: |
+    ssh-keygen -f "~/.ssh/known_hosts" -R "{{ network_ip }}"
+
+- name: Now, setup wanted apps with Aptitude
+  apt:
+    pkg:
+    - qemu-guest-agent
+    - python3
+    - network-manager
+    - nmon
+    - telnet
+    - mlocate
+    - sudo
+    - dnsutils
+    - vim
+    - snmp
+    - bash-completion
+    - ssh
+    - unattended-upgrades
+  delegate_to: "{{ network_ip }}"
+  when: os2deploy == "debian" or os2deploy == "ubuntu"
+
+- name: Now, setup wanted apps with Dnf
+  apt:
+    dnf:
+    - qemu-guest-agent
+    - python3
+    - network-manager
+    - nmon
+    - telnet
+    - mlocate
+    - sudo
+    - dnsutils
+    - vim
+    - snmp
+    - bash-completion
+    - ssh
+    - dnf-automatic
+  delegate_to: "{{ network_ip }}"
+  when: os2deploy == "rocky"
+  
+- name: Configure SNMP service
+  blockinfile:
+    path: "{{ locations.snmp_conf }}"
+    insertafter: "rocommunity"
+    content: rocommunity "{{ snmp_community }}"
+
+- name: Restart and activate SNMP service
+  service:
+    name: snmpd
+    state: restarted
+    enabled: yes

@@ -1,0 +1,7 @@
+---
+all:
+  hosts:
+    kvm04:
+      ansible_host: 192.168.4.5
+      ansible_connection: ssh
+      ansible_user: root
