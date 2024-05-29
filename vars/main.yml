@@ -30,7 +30,7 @@ snmp_community: public
 locations:
   working_folder: "/tmp"
   ansible_public_key: "~/.ssh/id_rsa.pub"
-  snmp_conf: "/etc/snmp/snmpd.conf"
+  snmp_conf: "/etc/snmp/snmp.conf"
 
 # Cloud-Init image location
 qcow2_images:
