@@ -5,7 +5,7 @@
 
 - name: Wait for Cloud-Init end
   wait_for:
-    host: "{{ host_config['hw']['network']['ip'] }}"
+    host: "{{ host_config['network']['ip'] }}"
     port: 22
     delay: 60
     state: present

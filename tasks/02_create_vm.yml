@@ -11,7 +11,7 @@
       --name {{ host_config['hostname'] }} \
       --memory {{ host_config['hw']['memory'] }} \
       --cores {{ host_config['hw']['cores'] }} \
-      --net0 virtio,bridge={{ host_config['hw']['network']['bridge'] }},tag={{ host_config['hw']['network']['vlan'] }} \
+      --net0 virtio,bridge={{ host_config['network']['bridge'] }},tag={{ host_config['network']['vlan'] }} \
       --scsihw virtio-scsi-pci \
       --agent 1
 

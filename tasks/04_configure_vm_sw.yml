@@ -2,12 +2,12 @@
 - name: Configure IP address
   command: |
     qm set {{ vm_id }} \
-    --ipconfig0 ip={{ host_config['hw']['network']['ip'] }}/{{ host_config['hw']['network']['cidr'] }},gw={{ host_config['hw']['network']['gw'] }}
+    --ipconfig0 ip={{ host_config['network']['ip'] }}/{{ host_config['network']['cidr'] }},gw={{ host_config['network']['gw'] }}
 
 - name: Configure DNS
   command: |
     qm set {{ vm_id }} \
-    --nameserver {{ host_config['hw']['network']['dns_ip'] }} \
+    --nameserver {{ host_config['network']['dns_ip'] }} \
     --searchdomain {{ host_config['domain'] }}
 
 - name: Init username and password (security risk !)

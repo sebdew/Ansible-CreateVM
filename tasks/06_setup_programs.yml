@@ -1,7 +1,7 @@
 ---
 - name: Before first connexion, we remove known IP from file known_hosts (just in case of)
   command: |
-    ssh-keygen -f "~/.ssh/known_hosts" -R "{{ host_config['hw']['network']['ip'] }}"
+    ssh-keygen -f "~/.ssh/known_hosts" -R "{{ host_config['network']['ip'] }}"
 
 - name: Setup Python if not installed
   block:
@@ -13,7 +13,7 @@
   always:
     - name: Gathering Facts
       setup: ~
-  delegate_to: "{{ host_config['hw']['network']['ip'] }}"
+  delegate_to: "{{ host_config['network']['ip'] }}"
 
 - name: Now, setup wanted apps with Aptitude
   apt:
@@ -31,7 +31,7 @@
     - bash-completion
     - ssh
     - unattended-upgrades
-  delegate_to: "{{ host_config['hw']['network']['ip'] }}"
+  delegate_to: "{{ host_config['network']['ip'] }}"
   when: os2deploy == "debian" or os2deploy == "ubuntu"
 
 - name: Now, setup wanted apps with Dnf
@@ -50,5 +50,5 @@
     - bash-completion
     - ssh
     - dnf-automatic
-  delegate_to: "{{ host_config['hw']['network']['ip'] }}"
+  delegate_to: "{{ host_config['network']['ip'] }}"
   when: os2deploy == "rocky"
