@@ -1,147 +1,38 @@
 ---
-- name: Download QCOW2 image
-  get_url:
-    url: "{{ qcow2_images[os2deploy][version2deploy] }}"
-    dest: "{{ locations.working_folder }}"
-
-- name: Display downloaded file name
+- name: Working on
   debug:
-    msg: "{{ qcow2_images[os2deploy][version2deploy] | basename}}"
+    msg: "Working on {{ inventory_hostname }}: {{ ansible_distribution }} {{ ansible_distribution_major_version }} ({{ ansible_distribution_version }})"
 
-# https://forum.proxmox.com/threads/next-availale-vmid-and-available-templates-through-api.14839/
-- name: Get next VM ID
-  command: |
-    pvesh get /cluster/nextid
-  register: vm_id
+- name: Download cloud-init image
+  include_tasks: "01_download_qcow2.yml"
 
-- name: VM creation
-  command: |
-    qm create {{ vm_id.stdout }} \
-      --name {{ vm_name }} \
-      --memory {{ memory }} \
-      --cores {{ cores }} \
-      --net0 virtio,bridge={{ network_bridge }},tag={{ network_vlan }} \
-      --scsihw virtio-scsi-pci \
-      --agent 1
+- name: Create VM
+  include_tasks: "02_create_vm.yml"
 
-- name: Be sure that VM will start with host when it power on
-  command: |
-    qm set {{ vm_id.stdout }} \
-      --onboot 1
-  when: start_at_boot == true
+- name: Configure VM hardware
+  include_tasks: "03_configure_vm_hw.yml"
 
-- name: Import cloud-init disk previously downloaded
-  command: |
-    qm set {{ vm_id.stdout }} \
-    --scsi0 {{ hdd_storage_location }}:0,import-from={{ locations.working_folder }}/{{ qcow2_images[os2deploy][version2deploy] | basename}},format=qcow2
+- name: Reserve IP on our IPAM
+  debug:
+    msg: "For a future release"
 
-- name: Resize disk
-  command: |
-    qm resize {{ vm_id.stdout }} scsi0 {{ hdd_size }}
+- name: Create random root password on our password vault
+  debug:
+    msg: "For a future release"
 
-- name: Remove disk from temporary folder
-  file:
-    state: absent
-    path: "{{ locations.working_folder }}/{{ qcow2_images[os2deploy][version2deploy] | basename}}"
+- name: Configure VM software
+  include_tasks: "04_configure_vm_sw.yml"
 
-- name: Add CD-ROM device for Cloud-Init
-  command: |
-    qm set {{ vm_id.stdout }} \
-    --ide2 local-lvm:cloudinit
-    
-- name: Force boot order
-  command: |
-    qm set {{ vm_id.stdout }} \
-    --boot order=scsi0
+- name: Start VM
+  include_tasks: "05_start_vm.yml"
 
-- name: Configure IP address
-  command: |
-    qm set {{ vm_id.stdout }} \
-    --ipconfig0 ip={{ network_ip }}/{{ network_cidr }},gw={{ network_gw }}
+- name: Setup programs
+  include_tasks: "06_setup_programs.yml"
 
-- name: Configure DNS
-  command: |
-    qm set {{ vm_id.stdout }} \
-    --nameserver {{ dns_ip }} \
-    --searchdomain {{ dns_search }}
+- name: Configure SNMP
+  include_tasks: "07_configure_snmp.yml"
+  when: snmp_config['configure']
 
-- name: Init username and password (security risk !)
-  command: |
-    qm set {{ vm_id.stdout }} \
-    --ciuser root \
-    --cipassword {{ vm_root_pass }}
-
-- name: Add ansible public key for futur usage
-  command: |
-    qm set {{ vm_id.stdout }} \
-    --sshkeys "{{ locations.ansible_public_key }}"
-
-- name: Force package update at first boot
-  command: |
-    qm set {{ vm_id.stdout }} \
-    --ciupgrade 1
-
-- name: Start virtual machine
-  command: |
-    qm start {{ vm_id.stdout }}
-
-- name: Wait for Cloud-Init end
-  wait_for:
-    host: "{{ network_ip }}"
-    port: 22
-    delay: 60
-    state: present
-
-- name: Before first connexion, we remove known IP from file known_hosts (just in case of)
-  command: |
-    ssh-keygen -f "~/.ssh/known_hosts" -R "{{ network_ip }}"
-
-- name: Now, setup wanted apps with Aptitude
-  apt:
-    pkg:
-    - qemu-guest-agent
-    - python3
-    - network-manager
-    - nmon
-    - telnet
-    - mlocate
-    - sudo
-    - dnsutils
-    - vim
-    - snmp
-    - bash-completion
-    - ssh
-    - unattended-upgrades
-  delegate_to: "{{ network_ip }}"
-  when: os2deploy == "debian" or os2deploy == "ubuntu"
-
-- name: Now, setup wanted apps with Dnf
-  apt:
-    dnf:
-    - qemu-guest-agent
-    - python3
-    - network-manager
-    - nmon
-    - telnet
-    - mlocate
-    - sudo
-    - dnsutils
-    - vim
-    - snmp
-    - bash-completion
-    - ssh
-    - dnf-automatic
-  delegate_to: "{{ network_ip }}"
-  when: os2deploy == "rocky"
-  
-- name: Configure SNMP service
-  blockinfile:
-    path: "{{ locations.snmp_conf }}"
-    insertafter: "EOF"
-    content: rocommunity "{{ snmp_community }}"
-
-- name: Restart and activate SNMP service
-  service:
-    name: snmpd
-    state: restarted
-    enabled: yes
+- name: Add VM to our Bastion
+  debug:
+    msg: "For a future release"

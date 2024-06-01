@@ -1,0 +1,9 @@
+---
+- name: Download QCOW2 image
+  get_url:
+    url: "{{ qcow2_images[host_config['os']][host_config['version']] }}"
+    dest: "{{ locations['working_folder'] }}"
+
+- name: Display downloaded file name
+  debug:
+    msg: "{{ qcow2_images[host_config['os']][host_config['version']] | basename }}"

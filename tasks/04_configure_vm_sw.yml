@@ -1,0 +1,27 @@
+---
+- name: Configure IP address
+  command: |
+    qm set {{ vm_id }} \
+    --ipconfig0 ip={{ host_config['hw']['network']['ip'] }}/{{ host_config['hw']['network']['cidr'] }},gw={{ host_config['hw']['network']['gw'] }}
+
+- name: Configure DNS
+  command: |
+    qm set {{ vm_id }} \
+    --nameserver {{ host_config['hw']['network']['dns_ip'] }} \
+    --searchdomain {{ host_config['domain'] }}
+
+- name: Init username and password (security risk !)
+  command: |
+    qm set {{ vm_id }} \
+    --ciuser root \
+    --cipassword {{ host_config['root_password'] }}
+
+- name: Add ansible public key for futur usage
+  command: |
+    qm set {{ vm_id }} \
+    --sshkeys "{{ locations['ansible_public_key'] }}"
+
+- name: Force package update at first boot
+  command: |
+    qm set {{ vm_id }} \
+    --ciupgrade 1

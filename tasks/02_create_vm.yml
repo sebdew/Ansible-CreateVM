@@ -1,0 +1,30 @@
+---
+# https://forum.proxmox.com/threads/next-availale-vmid-and-available-templates-through-api.14839/
+- name: Get next VM ID
+  command: |
+    pvesh get /cluster/nextid
+  register: vm_id
+
+- name: VM creation
+  command: |
+    qm create {{ vm_id.stdout }} \
+      --name {{ host_config['hostname'] }} \
+      --memory {{ host_config['hw']['memory'] }} \
+      --cores {{ host_config['hw']['cores'] }} \
+      --net0 virtio,bridge={{ host_config['hw']['network']['bridge'] }},tag={{ host_config['hw']['network']['vlan'] }} \
+      --scsihw virtio-scsi-pci \
+      --agent 1
+
+- name: Get VM MAC address
+  command: |
+    qm config {{ vm_id.stdout }} | grep net0 | grep -o "..:..:..:..:.."
+  register: vm_mac
+
+- name: Simplify vars
+  set_fact:
+    - vm_id: "{{ vm_id.stdout }}"
+    - vm_mac: "{{ vm_mac.stdout }}"
+
+- name: Display VM id and MAC address
+  debug:
+    msg: "VM id is {{ vm_id }} and MAC address is {{ vm_mac }}"
