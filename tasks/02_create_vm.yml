@@ -19,11 +19,11 @@
   command: |
     qm config {{ vm_id.stdout }} | grep net0 | grep -o "..:..:..:..:.."
   register: vm_mac
-
+  
 - name: Simplify vars
   set_fact:
-    - vm_id: "{{ vm_id.stdout }}"
-    - vm_mac: "{{ vm_mac.stdout }}"
+    vm_id: "{{ vm_id.stdout }}"
+    vm_mac: "{{ vm_mac.stdout }}"
 
 - name: Display VM id and MAC address
   debug:
