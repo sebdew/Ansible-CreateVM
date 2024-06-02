@@ -33,6 +33,10 @@
   include_tasks: "07_configure_snmp.yml"
   when: snmp_config['configure']
 
+- name: Configure QEMU Agent
+  include_tasks: "08_configure_qemu_agent.yml"
+  when: qemu_agent_config['configure']
+
 - name: Add VM to our Bastion
   debug:
     msg: "For a future release"

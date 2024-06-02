@@ -37,6 +37,12 @@ snmp_config:
   service_name: snmp
   backup_config: yes # Can be yes or no (bolean)
 
+# QEMU Agent configuration
+qemu_agent_config:
+  configure: yes # Can be yes or no (bolean)
+  service_name: qemu-guest-agent
+  backup_config: yes # Can be yes or no (bolean)
+
 # File and folder default location
 locations:
   working_folder: "/tmp"

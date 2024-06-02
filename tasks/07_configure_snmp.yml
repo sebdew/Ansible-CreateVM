@@ -6,7 +6,7 @@
     block: |
       rocommunity {{ snmp_config['rocommunity'] }}
       syscontact {{ snmp_config['syscontact'] }}
-    backup: snmp_config['backup_config']
+    backup: "{{ snmp_config['backup_config'] }}"
   delegate_to: "{{ host_config['network']['ip'] }}"
 
 - name: Restart and activate SNMP service
