@@ -34,7 +34,7 @@ snmp_config:
   rocommunity: public
   syscontact: sebastien@dewarlez.fr
   conf_location: /etc/snmp/snmp.conf
-  service_name: snmp
+  service_name: snmpd
   backup_config: yes # Can be yes or no (bolean)
 
 # QEMU Agent configuration
