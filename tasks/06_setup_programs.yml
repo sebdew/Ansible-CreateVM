@@ -27,7 +27,7 @@
     - sudo
     - dnsutils
     - vim
-    - snmp
+    - snmpd
     - bash-completion
     - ssh
     - unattended-upgrades
@@ -46,7 +46,7 @@
     - sudo
     - dnsutils
     - vim
-    - snmp
+    - snmpd
     - bash-completion
     - ssh
     - dnf-automatic
