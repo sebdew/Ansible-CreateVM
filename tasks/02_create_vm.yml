@@ -15,9 +15,9 @@
       --scsihw virtio-scsi-pci \
       --agent 1
 
-- name: Get VM MAC address
-  command: |
-    qm config {{ vm_id.stdout }} | grep net0 | grep -o '..:..:..:..:..'
+- name: Get VM MAC address (use shell instead of command as | is ignored with command module)
+  shell: |
+    qm config {{ vm_id.stdout }} | grep net0 | grep -o "..:..:..:..:.."
   register: vm_mac
   
 - name: Simplify vars
