@@ -33,8 +33,22 @@ snmp_config:
   configure: yes # Can be yes or no (bolean)
   rocommunity: public
   syscontact: sebastien@dewarlez.fr
-  conf_location: /etc/snmp/snmp.conf
+  syslocation: home
+  conf_location: /etc/snmp/snmpd.conf
   service_name: snmpd
+  backup_config: yes # Can be yes or no (bolean)
+
+ntp_config:
+  configure: yes # Can be yes or no (bolean)
+  server: ntp.dewarlez.fr
+  conf_location:
+    debian: /etc/chrony/chrony.conf
+    ubuntu: /etc/chrony/chrony.conf
+    rocky: /etc/ntp.conf
+  service_name:
+    debian: chrony
+    ubuntu: chrony
+    rocky: ntpd
   backup_config: yes # Can be yes or no (bolean)
 
 # QEMU Agent configuration
@@ -51,7 +65,7 @@ locations:
 # Python is needed for ansible to work correctly, please provide package name and path
 python:
   pkg_name: python3
-  path: /usr/bin/python
+  path: /usr/bin/python3
 
 # Cloud-Init image location
 qcow2_images:
