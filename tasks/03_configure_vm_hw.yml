@@ -3,7 +3,7 @@
   command: |
     qm set {{ vm_id }} \
       --onboot 1
-  when: start_at_boot == true
+  when: host_config['hw']['start_at_boot'] == true
 
 - name: Import cloud-init disk previously downloaded
   command: |
