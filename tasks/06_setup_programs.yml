@@ -32,7 +32,7 @@
     - ssh
     - unattended-upgrades
   delegate_to: "{{ host_config['network']['ip'] }}"
-  when: os2deploy == "debian" or os2deploy == "ubuntu"
+  when: host_config['os'] == "debian" or host_config['os'] == "ubuntu"
 
 - name: Now, setup wanted apps with Dnf
   apt:
@@ -51,4 +51,4 @@
     - ssh
     - dnf-automatic
   delegate_to: "{{ host_config['network']['ip'] }}"
-  when: os2deploy == "rocky"
+  when: host_config['os'] == "rocky"
