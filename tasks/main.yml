@@ -37,6 +37,10 @@
   include_tasks: "08_configure_qemu_agent.yml"
   when: qemu_agent_config['configure']
 
+- name: Configure NTP Client
+  include_tasks: "09_configure_ntp_client.yml"
+  when: ntp_client_config['configure']
+
 - name: Add VM to our Bastion
   debug:
     msg: "For a future release"
