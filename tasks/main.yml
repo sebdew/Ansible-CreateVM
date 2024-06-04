@@ -39,7 +39,11 @@
 
 - name: Configure NTP Client
   include_tasks: "09_configure_ntp_client.yml"
-  when: ntp_client_config['configure']
+  when: ntp_config['configure']
+
+- name: Customize Bashrc
+  include_tasks: "10_customize_bashrc.yml"
+  when: bash_config['configure']
 
 - name: Add VM to our Bastion
   debug:

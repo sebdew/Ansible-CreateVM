@@ -1,0 +1,32 @@
+# History
+export HISTTIMEFORMAT="%F %T - %H:%M:%S "
+
+# Editor
+export EDITOR=vim
+
+# Alias
+# You may uncomment the following lines if you want `ls' to be colorized:
+export LS_OPTIONS='--color=auto'
+eval "`dircolors`"
+alias ls='ls $LS_OPTIONS'
+alias ll='ls $LS_OPTIONS -l'
+alias l='ls $LS_OPTIONS -lA'
+alias vi='vim'
+
+# Change prompt
+# If id command returns zero, you got root access.
+if [ $(id -u) -eq 0 ];
+then # you are root, set red colour prompt
+ PS1="\[$(tput bold)\]\[$(tput setaf 1)\]/!\\ \[$(tput setaf 2)\][\t] \[$(tput setaf 5)\]\u\[$(tput setaf 4)\]@\[$(tput setaf 1)\]\h\[$(tput setaf 4)\] \w\[$(tput setaf 4)\]]#\[$(tput sgr0)\]"
+else # normal
+ PS1="\[$(tput bold)\]\[$(tput setaf 2)\][\t] \[$(tput setaf 5)\]\u\[$(tput setaf 4)\]@\[$(tput setaf 1)\]\h\[$(tput setaf 4)\] \w\[$(tput setaf 4)\]]$\[$(tput sgr0)\]"
+fi
+
+{% if bash_config['alert_login']['enable'] %}
+# E-Mail the administrator about a new login
+ip=`echo $SSH_CONNECTION | cut -d " " -f 1`
+if [ -z $ip ]; then ip="localhost (with sudo)"; fi
+host=`hostname -f`
+logger -t ssh-wrapper $USER login from $ip
+echo "User $USER just logged in to $host from $ip" | mailx -s "[WARNING] SSH Login detected on $host" -r {{ bash_config['alert_login']['send_from'] }} {{ bash_config['alert_login']['send_to'] }}
+{% endif %}

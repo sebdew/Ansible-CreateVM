@@ -38,6 +38,7 @@ snmp_config:
   service_name: snmpd
   backup_config: yes # Can be yes or no (bolean)
 
+# NTP client configuration
 ntp_config:
   configure: yes # Can be yes or no (bolean)
   server: ntp.dewarlez.fr
@@ -56,6 +57,17 @@ qemu_agent_config:
   configure: yes # Can be yes or no (bolean)
   service_name: qemu-guest-agent
   backup_config: yes # Can be yes or no (bolean)
+
+# Bashrc customisation
+bash_config:
+  configure: yes # Can be yes or no (bolean)
+  default_bashrc: /etc/profile.d/default_bashrc.sh
+  root_bashrc: /root/.bashrc
+  backup_config: yes # Can be yes or no (bolean)
+  alert_login:
+    enable: no # Can be yes or no (bolean)
+    send_to: sebastien@dewarlez.fr
+    send_from: noreply@dewarlez.fr
 
 # File and folder default location
 locations:
