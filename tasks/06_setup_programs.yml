@@ -31,7 +31,7 @@
     - bash-completion
     - ssh
     - unattended-upgrades
-    - chrony
+    - ntp
   delegate_to: "{{ host_config['network']['ip'] }}"
   when: host_config['os'] == "debian" or host_config['os'] == "ubuntu"
 
@@ -51,6 +51,6 @@
     - bash-completion
     - ssh
     - dnf-automatic
-    - ntpd # to check
+    - ntp
   delegate_to: "{{ host_config['network']['ip'] }}"
   when: host_config['os'] == "rocky"

@@ -1,4 +1,9 @@
 ---
+- name: Change server timezone
+  command: |
+    timedatectl set-timezone {{ ntp_config['timezone'] }}
+  delegate_to: "{{ host_config['network']['ip'] }}"
+
 - name: Set NTP server
   lineinfile: 
     path: "{{ ntp_config['conf_location'][host_config['os']] }}"

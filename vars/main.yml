@@ -42,13 +42,14 @@ snmp_config:
 ntp_config:
   configure: yes # Can be yes or no (bolean)
   server: ntp.dewarlez.fr
+  timezone: Europe/Paris
   conf_location:
-    debian: /etc/chrony/chrony.conf
-    ubuntu: /etc/chrony/chrony.conf
+    debian: /etc/ntpsec/ntp.conf
+    ubuntu: /etc/ntpsec/ntp.conf
     rocky: /etc/ntp.conf
   service_name:
-    debian: chrony
-    ubuntu: chrony
+    debian: ntpd
+    ubuntu: ntpd
     rocky: ntpd
   backup_config: yes # Can be yes or no (bolean)
 
