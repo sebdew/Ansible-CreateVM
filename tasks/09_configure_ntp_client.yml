@@ -1,7 +1,7 @@
 ---
 - name: Set NTP server
   lineinfile: 
-    path: "{{ ntp_config['conf_location'][{{ host_config['os'] }}] }}"
+    path: "{{ ntp_config['conf_location'][host_config['os']] }}"
     regexp: "^pool(.*)$"
     line: "pool {{ ntp_config['server'] }}"
     backrefs: yes
@@ -10,7 +10,7 @@
 
 - name: Restart and activate NTP service
   service:
-    name: "{{ ntp_config['service_name'][{{ host_config['os'] }}] }}"
+    name: "{{ ntp_config['service_name'][host_config['os']] }}"
     state: restarted
     enabled: yes
   delegate_to: "{{ host_config['network']['ip'] }}"
