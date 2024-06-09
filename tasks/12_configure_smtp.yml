@@ -5,6 +5,7 @@
     state: absent
     regexp: "^(# BEGIN ANSIBLE MANAGED BLOCK|set smtp=|set hostname=|# END ANSIBLE MANAGED BLOCK)"
     backup: "{{ smtp_config['backup_config'] }}"
+    create: yes
   delegate_to: "{{ host_config['network']['ip'] }}"
 
 - name: Add SMTP configuration
@@ -14,6 +15,7 @@
       set smtp="{{ smtp_config['host'] }}"
       set hostname="{{ host_config['hostname'] }}.{{ host_config['domain'] }}"
     backup: "{{ smtp_config['backup_config'] }}"
+    create: yes
   delegate_to: "{{ host_config['network']['ip'] }}"
 
 - name: Send a test email
