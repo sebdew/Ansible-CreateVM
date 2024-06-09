@@ -4,6 +4,14 @@
     timedatectl set-timezone {{ ntp_config['timezone'] }}
   delegate_to: "{{ host_config['network']['ip'] }}"
 
+- name: Remove other NTP server
+  lineinfile:
+    path: "{{ ntp_config['conf_location'][host_config['os']] }}"
+    state: absent
+    regexp: "^pool(.*)$"
+    backup: "{{ ntp_config['backup_config'] }}"
+  delegate_to: "{{ host_config['network']['ip'] }}"
+
 - name: Set NTP server
   lineinfile: 
     path: "{{ ntp_config['conf_location'][host_config['os']] }}"

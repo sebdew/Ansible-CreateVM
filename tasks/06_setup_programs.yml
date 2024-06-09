@@ -32,6 +32,7 @@
     - ssh
     - unattended-upgrades
     - ntp
+    - rsyslog
   delegate_to: "{{ host_config['network']['ip'] }}"
   when: host_config['os'] == "debian" or host_config['os'] == "ubuntu"
 
@@ -52,5 +53,6 @@
     - ssh
     - dnf-automatic
     - ntp
+    - rsyslog
   delegate_to: "{{ host_config['network']['ip'] }}"
   when: host_config['os'] == "rocky"

@@ -12,14 +12,6 @@
 - name: Configure VM hardware
   include_tasks: "03_configure_vm_hw.yml"
 
-- name: Reserve IP on our IPAM
-  debug:
-    msg: "For a future release"
-
-- name: Create random root password on our password vault
-  debug:
-    msg: "For a future release"
-
 - name: Configure VM software
   include_tasks: "04_configure_vm_sw.yml"
 
@@ -45,6 +37,21 @@
   include_tasks: "10_customize_bashrc.yml"
   when: bash_config['configure']
 
-- name: Add VM to our Bastion
-  debug:
-    msg: "For a future release"
+- name: Configure Syslog
+  include_tasks: "11_configure_syslog.yml"
+  when: syslog_config['configure']
+
+- name: Configure SMTP
+  include_tasks: "12_configure_smtp.yml"
+  when: smtp_config['configure']
+
+- name: Create users
+  include_tasks: "13_create_users.yml"
+  when: users_config['configure']
+
+- name: Improve server security
+  include_tasks: "14_disable_ssh_root_access.yml"
+  when: security_config['configure']
+
+- name: Reboot and done
+  include_tasks: "15_reboot_and_done.yml"

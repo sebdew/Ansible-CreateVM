@@ -1,0 +1,29 @@
+---
+- name: Remove already existing SMTP config to avoid conflict
+  lineinfile:
+    path: "{{ smtp_config['conf_location'] }}"
+    state: absent
+    regexp: "^(set smtp=|set hostname=)"
+    backup: "{{ smtp_config['backup_config'] }}"
+  delegate_to: "{{ host_config['network']['ip'] }}"
+
+- name: Add SMTP configuration
+  blockinfile:
+    path: "{{ smtp_config['conf_location'] }}"
+    block: |
+      set smtp="{{ smtp_config['host'] }}"
+      set hostname="{{ host_config['hostname'] }}.{{ host_config['domain'] }}"
+    backup: "{{ smtp_config['backup_config'] }}"
+  delegate_to: "{{ host_config['network']['ip'] }}"
+
+- name: Send a test email
+  mail:
+    host: "{{ smtp_config['host'] }}"
+    port: "{{ smtp_config['port'] }}"
+    subject: "[Ansible Bootstrap] Test e-mail from {{ host_config['hostname'] }}"
+    body: "This a test email !"
+    from: "{{ smtp_config['test_from'] }}"
+    to: "{{ smtp_config['test_to'] }}"
+  when: smtp_config['test']
+  ignore_errors: yes
+  delegate_to: "{{ host_config['network']['ip'] }}"

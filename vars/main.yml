@@ -8,7 +8,7 @@ host_config:
   hostname: vm-test
   domain: dewarlez.fr
 
-  # Provide root password
+  # Provide root default password
   root_password: viergee
   
   # Hardware specs
@@ -41,7 +41,7 @@ snmp_config:
 # NTP client configuration
 ntp_config:
   configure: yes # Can be yes or no (bolean)
-  server: ntp.dewarlez.fr
+  server: 192.168.2.134
   timezone: Europe/Paris
   conf_location:
     debian: /etc/ntpsec/ntp.conf
@@ -51,6 +51,24 @@ ntp_config:
     debian: ntpd
     ubuntu: ntpd
     rocky: ntpd
+  backup_config: yes # Can be yes or no (bolean)
+
+# Syslog configuration
+syslog_config:
+  configure: yes # Can be yes or no (bolean)
+  server: syslog.dewarlez.fr
+  conf_location: /etc/rsyslog.d/custom.conf
+  service_name: rsyslog
+  backup_config: yes # Can be yes or no (bolean)
+
+# SMTP configuration to allow server sending email
+smtp_config:
+  configure: yes # Can be yes or no (bolean)
+  host: smtp.dewarlez.fr
+  test: yes # Can be yes or no (bolean)
+  test_from: noreply@dewarlez.fr
+  test_to: sebastien@dewarlez.fr
+  conf_location: /etc/mail.rc
   backup_config: yes # Can be yes or no (bolean)
 
 # QEMU Agent configuration
@@ -69,6 +87,28 @@ bash_config:
     enable: no # Can be yes or no (bolean)
     send_to: sebastien@dewarlez.fr
     send_from: noreply@dewarlez.fr
+
+# Create a series of default users
+users_config:
+  configure: yes # Can be yes or no (bolean)
+  users:
+    - name: root
+      password: "$6$cDP4/kfEjABOFzju$absFqDNB2KVrcxGQTRZkBbFuK5CAIMXUUPqu2/HSkYRSfeUZwyN5XjmUxApYuYCiHHDnjhvOBVzDjmrRXrsk6." # poiuyt123$
+      state: present # Can be present or absent
+      createhome: no # Can be yes or no (bolean)
+      sudo: yes # Can be yes or no (bolean)
+    - name: sdewarle
+      password: "$6$cDP4/kfEjABOFzju$absFqDNB2KVrcxGQTRZkBbFuK5CAIMXUUPqu2/HSkYRSfeUZwyN5XjmUxApYuYCiHHDnjhvOBVzDjmrRXrsk6." # poiuyt123$
+      state: present # Can be present or absent
+      createhome: yes # Can be yes or no (bolean)
+      sudo: yes # Can be yes or no (bolean)
+
+# Parameters to reconfigure SSH service
+security_config:
+  configure: yes # Can be yes or no (bolean)
+  conf_location: /etc/ssh/sshd_config
+  service_name: sshd
+  backup_config: yes # Can be yes or no (bolean)
 
 # File and folder default location
 locations:

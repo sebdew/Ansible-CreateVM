@@ -1,0 +1,11 @@
+---
+- name: Disable root login with SSH
+  lineinfile:
+    path: "{{ security_config['conf_location'] }}"
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+    backup: "{{ security_config['backup_config'] }}"
+  when:
+    - users_config['configure'] # If no other users are configured, do not disable root access
+    - users_config['users'] | count >= 2 # We must have almost 2 other users created to disable root access
+  delegate_to: "{{ host_config['network']['ip'] }}"
