@@ -6,6 +6,7 @@
       # Custom syslog server
       *.warn;kern.none @{{ syslog_config['server'] }}
     backup: "{{ syslog_config['backup_config'] }}"
+    create: yes
   delegate_to: "{{ host_config['network']['ip'] }}"
 
 - name: Restart and activate Syslog service

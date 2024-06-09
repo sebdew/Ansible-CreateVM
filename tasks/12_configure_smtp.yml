@@ -3,7 +3,7 @@
   lineinfile:
     path: "{{ smtp_config['conf_location'] }}"
     state: absent
-    regexp: "^(set smtp=|set hostname=)"
+    regexp: "^(# BEGIN ANSIBLE MANAGED BLOCK|set smtp=|set hostname=|# END ANSIBLE MANAGED BLOCK)"
     backup: "{{ smtp_config['backup_config'] }}"
   delegate_to: "{{ host_config['network']['ip'] }}"
 
