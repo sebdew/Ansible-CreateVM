@@ -5,6 +5,7 @@
     password: "{{ item['password'] }}"
     state: "{{ item['state'] | default('present') }}"
     createhome: "{{ item['createhome'] | default('yes') }}"
+    shell: /bin/bash
   loop: "{{ users_config['users'] }}"
   delegate_to: "{{ host_config['network']['ip'] }}"
 
