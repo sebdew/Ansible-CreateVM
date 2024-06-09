@@ -20,6 +20,7 @@
     pkg:
     - qemu-guest-agent
     - python3
+    - python-is-python3
     - network-manager
     - nmon
     - telnet
@@ -41,6 +42,7 @@
     dnf:
     - qemu-guest-agent
     - python3
+    - python-is-python3
     - network-manager
     - nmon
     - telnet
