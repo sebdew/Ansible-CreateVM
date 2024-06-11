@@ -13,7 +13,7 @@
     path: "{{ bash_config['root_bashrc'] }}"
     block: |
       # Display only if interactive login
-      if [ $- == *i* ];
+      if [[ $- == *i* ]];
       then
         # Warning message when you are root
         echo ""

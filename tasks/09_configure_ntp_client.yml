@@ -15,9 +15,7 @@
 - name: Set NTP server
   lineinfile: 
     path: "{{ ntp_config['conf_location'][host_config['os']] }}"
-    regexp: "^pool(.*)$"
     line: "pool {{ ntp_config['server'] }}"
-    backrefs: yes
     backup: "{{ ntp_config['backup_config'] }}"
   delegate_to: "{{ host_config['network']['ip'] }}"
 

@@ -32,7 +32,7 @@ echo "User $USER just logged in to $host from $ip" | mailx -s "[WARNING] SSH Log
 {% endif %}
 
 # Display credits at each interactive login
-if [ $- == *i* ];
+if [[ $- == *i* ]];
 then
  echo ""
  echo "██████╗░███████╗░██╗░░░░░░░██╗░█████╗░██████╗░██╗░░░░░███████╗███████╗░░░███████╗██████╗░"
