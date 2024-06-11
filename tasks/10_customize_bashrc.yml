@@ -12,16 +12,20 @@
   blockinfile:
     path: "{{ bash_config['root_bashrc'] }}"
     block: |
-      # Warning message when you are root
-      echo ""
-      date
-      echo ""
-      echo "*********************************************"
-      echo "*                  WARNING                  *"
-      echo "*********************************************"
-      echo "You are connected as root!"
-      echo "All changes performed using this user can corrupt the system."
-      echo "Be carreful and if you have any doubt about what you are doing, please contact your administrator. Thanks."
-      echo ""
+      # Display only if interactive login
+      if [ $- == *i* ];
+      then
+        # Warning message when you are root
+        echo ""
+        date
+        echo ""
+        echo "*********************************************"
+        echo "*                  WARNING                  *"
+        echo "*********************************************"
+        echo "You are connected as root!"
+        echo "All changes performed using this user can corrupt the system."
+        echo "Be carreful and if you have any doubt about what you are doing, please contact your administrator. Thanks."
+        echo ""
+      fi
     backup: "{{ bash_config['backup_config'] }}"
   delegate_to: "{{ host_config['network']['ip'] }}"
