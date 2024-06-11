@@ -65,6 +65,7 @@ syslog_config:
 smtp_config:
   configure: yes # Can be yes or no (bolean)
   host: smtp.dewarlez.fr
+  port: 25
   test: yes # Can be yes or no (bolean)
   test_from: noreply@dewarlez.fr
   test_to: sebastien@dewarlez.fr
