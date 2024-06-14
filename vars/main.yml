@@ -83,6 +83,7 @@ bash_config:
   configure: yes # Can be yes or no (bolean)
   default_bashrc: /etc/profile.d/default_bashrc.sh
   root_bashrc: /root/.bashrc
+  skeleton_bashrc: /etc/skel/.bashrc
   backup_config: yes # Can be yes or no (bolean)
   alert_login:
     enable: no # Can be yes or no (bolean)

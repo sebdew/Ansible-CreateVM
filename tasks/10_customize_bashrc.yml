@@ -29,3 +29,9 @@
       fi
     backup: "{{ bash_config['backup_config'] }}"
   delegate_to: "{{ host_config['network']['ip'] }}"
+
+- name: Remove default .bashrc file on each userhome (to force default prompt)
+  file:
+    path: "{{ bash_config['skeleton_bashrc'] }}"
+    state: absent
+  delegate_to: "{{ host_config['network']['ip'] }}"
