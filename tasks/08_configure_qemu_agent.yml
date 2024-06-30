@@ -1,6 +1,0 @@
----
-- name: Restart QEMU Agent service (no need to enable, it's by default)
-  service:
-    name: "{{ qemu_agent_config['service_name'] }}"
-    state: restarted
-  delegate_to: "{{ host_config['network']['ip'] }}"

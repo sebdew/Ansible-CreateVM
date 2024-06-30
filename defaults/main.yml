@@ -1,0 +1,17 @@
+---
+# File and folder default location
+locations:
+  working_folder: "/tmp"
+  ansible_public_key: "~/.ssh/id_rsa.pub"
+
+# Cloud-Init image location
+qcow2_images:
+  debian:
+    12: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"
+    11: "https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-genericcloud-amd64.qcow2"
+    10: "https://cloud.debian.org/images/cloud/buster/latest/debian-10-genericcloud-amd64.qcow2"
+  ubuntu:
+    24.04: "http://cloud-images.ubuntu.com/releases/noble/release/ubuntu-24.04-server-cloudimg-amd64.img"
+  rocky:
+    9: "http://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-GenericCloud-Base.latest.x86_64.qcow2"
+    8: "http://dl.rockylinux.org/pub/rocky/8/images/x86_64/Rocky-8-GenericCloud-Base.latest.x86_64.qcow2"

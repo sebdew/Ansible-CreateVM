@@ -1,7 +1,6 @@
 ---
 - name: CreateVM
-  hosts: all
-  gather_facts: true
+  hosts: proxmox
 
   tasks:
   - name: Create VM

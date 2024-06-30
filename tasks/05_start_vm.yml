@@ -9,3 +9,12 @@
     port: 22
     delay: 60
     state: present
+
+- name: Display end message
+  debug:
+    msg: |
+      VM created with success !
+      Proxmox ID = {{ vm_id }}
+      MAC = {{ vm_mac }}"
+      IP = {{ host_config['network']['ip'] }}
+      Name = {{ host_config['hostname'] }}
