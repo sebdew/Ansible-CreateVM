@@ -15,3 +15,32 @@ qcow2_images:
   rocky:
     9: "http://dl.rockylinux.org/pub/rocky/9/images/x86_64/Rocky-9-GenericCloud-Base.latest.x86_64.qcow2"
     8: "http://dl.rockylinux.org/pub/rocky/8/images/x86_64/Rocky-8-GenericCloud-Base.latest.x86_64.qcow2"
+
+host_config:
+  # Choose OS version you want to deploy (Debian (10, 11 or 12), Ubuntu (24.04) or Rocky (8 or 9))
+  os: "debian"
+  version: 12
+
+  # Enter hostname and domain name for your VM
+  hostname: vm-test
+  domain: dewarlez.fr
+
+  # Provide root default password
+  root_password: viergee
+  
+  # Hardware specs
+  hw:
+    start_at_boot: true
+    memory: 4096
+    cores: 2
+    hdd_size: 50G
+    hdd_storage_location: local-vm
+
+  # Network specs
+  network:
+    bridge: vmbr0
+    vlan: 301
+    ip: 192.168.4.10
+    cidr: 25
+    gw: 192.168.4.1
+    dns_ip: 192.168.2.134
